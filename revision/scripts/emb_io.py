@@ -17,6 +17,8 @@ def load_split(root, model: str, dataset_tag: str, split: str, mmap: bool = Fals
     if len(chunks) != meta["n_chunks"]:
         raise RuntimeError("{}: expected {} chunks, found {}".format(d, meta["n_chunks"], len(chunks)))
     X = np.concatenate([np.load(c, mmap_mode="r" if mmap else None) for c in chunks], axis=0)
+    if X.dtype != np.float32 and not mmap:
+        X = X.astype(np.float32)
     y = np.load(d / "y.npy").astype(np.float32).reshape(-1)
     if len(X) != len(y):
         raise RuntimeError("{}: {} embeddings vs {} labels".format(d, len(X), len(y)))

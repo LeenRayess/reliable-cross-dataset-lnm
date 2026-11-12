@@ -154,13 +154,15 @@ def extract_split(args, backbone, device, h5_dir: Path, split: str, out_dir: Pat
             with autocast_ctx(args.precision, device):
                 z = embed(args.model, backbone, xb.to(device, non_blocking=True))
             z = z.float().cpu().numpy()
+            if not np.isfinite(z).all():
+                raise RuntimeError("non-finite embeddings (precision={}); rerun with --precision fp32".format(args.precision))
             if device.type == "cuda":
                 torch.cuda.synchronize()
             t_gpu += time.time() - t0
             rs, re_ = ranges[i]
             buf[rs - s:re_ - s] = z
         tmp = out_dir / "chunk_{:05d}.tmp.npy".format(c_idx)
-        np.save(tmp, buf)
+        np.save(tmp, buf.astype(args.store_dtype, copy=False))
         os.replace(tmp, out_dir / "chunk_{:05d}.npy".format(c_idx))
         rows_done += e - s
         el = time.time() - t_split
@@ -170,7 +172,7 @@ def extract_split(args, backbone, device, h5_dir: Path, split: str, out_dir: Pat
     wall = time.time() - t_split
     done = {
         "n_rows": int(n), "n_chunks": len(chunks), "chunk_rows": cs, "batch_size": bs,
-        "precision": args.precision,
+        "precision": args.precision, "store_dtype": args.store_dtype,
         "rows_this_session": rows_done,
         "wall_seconds_this_session": round(wall, 2),
         "model_seconds_this_session": round(t_gpu, 2),
@@ -228,7 +230,9 @@ def main():
     ap.add_argument("--chunk-rows", type=int, default=16384)
     ap.add_argument("--num-workers", type=int, default=2)
     ap.add_argument("--precision", choices=["fp32", "fp16", "bf16"], default="fp32",
-                    help="fp32 matches the original runs exactly")
+                    help="fp32 matches the original runs exactly; fp16 is ~4-8x faster on T4/L4")
+    ap.add_argument("--store-dtype", choices=["float32", "float16"], default="float32",
+                    help="dtype of saved embeddings (float16 halves disk use)")
     ap.add_argument("--limit", type=int, default=None, help="only first N rows per split (testing)")
     ap.add_argument("--benchmark-only", action="store_true")
     ap.add_argument("--bench-batches", type=int, nargs="+", default=[1, 32, 256])

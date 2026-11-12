@@ -98,8 +98,8 @@ STEPS = [
             ("h", "How"),
             ("b", [
                 "revision/scripts/extract_embeddings.py runs each encoder once over train / validation / test of the preprocessed PCam and CAMELYON17 sets "
-                "and saves the embeddings. The input transform is identical to the original scripts (bicubic 96→224, clamp to [0,1], ImageNet mean/std), "
-                "full fp32 precision, TF32 disabled.",
+                "and saves the embeddings. The input transform is identical to the original scripts (bicubic 96→224, clamp to [0,1], ImageNet mean/std). "
+                "The encoder forward pass runs in half precision (fp16 autocast) and embeddings are stored as float16; see the precision check below.",
                 "It also records: Hugging Face commit, weight fingerprint, software versions, GPU, throughput (patches/s), "
                 "per-patch latency at batch sizes 1, 32, 256 in fp32 and fp16, and peak GPU memory.",
                 "Runs on Google Colab (L4 GPU) via revision/notebooks/colab_step1_extract_embeddings.ipynb; resumable after disconnects.",
@@ -114,6 +114,11 @@ STEPS = [
                 ["Largest logit difference", "0.0099 (mean 0.0017; logits range −3.4 to 10.8)"],
                 ["Encoder weights identical to original run", "Yes (SHA-256 match)"],
             ]]),
+            ("p", "**Precision check (fp16).** Full-precision (fp32) extraction would take roughly a day per model on a Colab T4 GPU. "
+                  "Half precision (fp16) is several times faster and halves storage. The same check with fp16 embeddings stored as float16 "
+                  "(first 256 CAMELYON17 test patches, original PCam-trained Virchow2 head) gave the **same decision at 0.5 for 256/256 patches**; "
+                  "largest logit difference 0.072 (mean 0.010), largest probability difference 0.005. All new experiments use the same fp16 "
+                  "embeddings, so they are fully consistent with one another; the original single runs are kept as the reference."),
             ("p", "The tiny differences are ordinary floating-point differences between GPUs. The full check on all test sets for both models "
                   "is Step 2. **Consequence: the original results remain valid and directly comparable to the new runs.**"),
             ("p", "For reference, the local GPU (GTX 1050 Ti, 4 GB) processes 1.9 patches/s with Virchow2 in fp32 (peak memory 3.2 GB) — "
