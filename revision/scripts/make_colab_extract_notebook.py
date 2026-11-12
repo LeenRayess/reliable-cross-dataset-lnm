@@ -10,7 +10,7 @@ cells = [
            "Expected time on L4 (fp32): roughly 1.5–3 h per model for both datasets."),
     ("code", "from google.colab import drive\ndrive.mount('/content/drive')\n!nvidia-smi"),
     ("code", "%cd /content\nimport os\nif os.path.isdir('GP_ECG'):\n    %cd GP_ECG\n    !git pull\nelse:\n"
-             "    !git clone https://github.com/LeenRayess/GP_ECG.git GP_ECG\n    %cd GP_ECG\n!git log -1 --oneline"),
+             "    !git clone https://github.com/LeenRayess/reliable-cross-dataset-lnm.git GP_ECG\n    %cd GP_ECG\n!git log -1 --oneline"),
     ("code", "# ---- settings ----\n"
              "HF_TOKEN = ''  # paste from https://huggingface.co/settings/tokens (needs access to UNI2-h and Virchow2)\n"
              "MODELS = ['uni2h', 'virchow2']   # run both in one session, or one per session\n"
