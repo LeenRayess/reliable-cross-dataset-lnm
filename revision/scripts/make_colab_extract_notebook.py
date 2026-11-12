@@ -16,7 +16,7 @@ cells = [
              "MODELS = ['uni2h', 'virchow2']   # run both in one session, or one per session\n"
              "DATA = {\n"
              "    'pcam_macenko':  '/content/drive/MyDrive/GP_ECG_DATA/preprocessed_macenko_benchmark_style',\n"
-             "    'cam17_macenko': '/content/drive/MyDrive/GP_ECG_DATA/wilds/camelyon17_h5_full_oodval/preprocessed_macenko_benchmark_style',\n"
+             "    'cam17_macenko': '/content/drive/MyDrive/GP_ECG_DATA/wilds/preprocessed_macenko_benchmark_style',\n"
              "}\n"
              "OUT_ROOT = '/content/drive/MyDrive/GP_ECG_REVISION/embeddings'\n\n"
              "import os\nif not HF_TOKEN:\n    raise ValueError('Set HF_TOKEN first')\n"
