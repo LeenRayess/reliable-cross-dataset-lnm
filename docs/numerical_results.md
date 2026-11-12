@@ -1,6 +1,6 @@
 # Numerical results hub
 
-Single place to look up **numbers that already exist on this machine** (mostly under `reports/` and `experiments/`) plus **simple derived quantities** (differences, rates). Virchow **held-out test** scalars in §10 are ingested from `experiments/virchow_colab/evals_cross_domain/*/test_metrics_detailed.json`. UNI2-h **training validation** scalars in §11 are from `experiments/uni2h_colab/uni2h_macenko_bench_run_01/` (test eval pending).
+Single place to look up **numbers that already exist on this machine** (mostly under `reports/` and `experiments/`) plus **simple derived quantities** (differences, rates). Virchow **held-out test** scalars in §10 are ingested from `experiments/virchow_colab/evals_cross_domain/*/test_metrics_detailed.json`. UNI2-h **training validation** is in §11.1–11.5; **held-out test C1–C4** in §11.9 from `experiments/uni2h_colab/evals_cross_domain_uni2h/*/test_metrics_detailed.json`.
 
 **Canonical narrative tables** also live in `docs/thesis_results_section.md`; §10.2 here is kept aligned to those JSON exports (re-run ingestion if you replace the files).
 
@@ -17,8 +17,9 @@ Single place to look up **numbers that already exist on this machine** (mostly u
 | Virchow **held-out test** metrics (Table 8–9) | `test_metrics_detailed.json` + `test_metrics.json` from eval (see §10.2); often under `…/evals_cross_domain/<name>/` if you used `colab_eval_virchow_all_pending_tests.ipynb` |
 | Virchow **bootstrap / permutation** (§10.3–10.5) | `reports/inference/virchow_test_inference.json`, `virchow_test_inference.csv` — from `scripts/virchow_test_bootstrap_inference.py` on `test_predictions.npz` |
 | Virchow **training** end-of-run (mostly **val**) | `experiments/virchow_colab/virchow_macenko_bench_run_01/` (PCam), `…/virchow_wilds_preprocessed_run_01/` (CAM17); `metrics_final.json`, `metrics_final_detailed.json`, `metrics_history.json`, `temperature_fit.json` |
-| UNI2-h **training** end-of-run (mostly **val**) | `experiments/uni2h_colab/uni2h_macenko_bench_run_01/` (PCam train complete); WILDS train pending. Same artifact names as Virchow training runs. |
-| UNI2-h **held-out test** (C1–C4) | Pending — mirror Virchow layout under `experiments/uni2h_colab/evals_cross_domain/` after Colab eval. |
+| UNI2-h **training** end-of-run (mostly **val**) | `experiments/uni2h_colab/uni2h_macenko_bench_run_01/` (PCam); CAM17 train on Drive `uni2h_wilds_preprocessed_run_01` (local train folder optional). |
+| UNI2-h **held-out test** (C1–C4) | `experiments/uni2h_colab/evals_cross_domain_uni2h/<folder>/test_metrics_detailed.json` (same subfolder names as Virchow §10.2). |
+| UNI2-h **bootstrap / permutation** (§11.13) | `reports/inference/uni2h_test_inference.json`, `uni2h_test_inference.csv` — same script as Virchow with `--eval-root` pointing at UNI2-h evals. |
 | CNN baseline full pipeline (§9) | `experiments/cnn_baseline_20260512_160329/evaluation/metrics_all.json`, `metrics_summary.csv`; per-arm `metrics_per_epoch.json`, `temperature_fit.json` |
 | Qualitative sampling (pool sizes) | `reports/qualitative_error_analysis/virchow_c1_c4/*/bucket_sampling_summary.json` |
 | Qualitative **human review** (checklist) | `reports/qualitative_error_analysis/virchow_c1_c4/*/review_labels_template.csv` (50 cases × 4 conditions; six items, no free-text) |
@@ -140,20 +141,27 @@ Use that JSON for any table of raw-scan counts; not re-pasted here in full.
 
 ---
 
-## 7. Stain-method CNN benchmark (C5 / C6, PCam benchmark splits)
+## 7. Stain-method CNN benchmark (C5 / C6, val-only selection rerun)
 
 Full precision: `reports/stain_benchmark_c5_c6_metrics.json`.
 
-| ID | Arm | Val ROC-AUC | Test ROC-AUC | Δ (test−val) | Test acc | Test F1 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| C5 | Macenko | 0.917670 | 0.925253 | **+0.007583** | 0.812245 | 0.841959 |
-| C5 | Reinhard | 0.929304 | 0.917288 | −0.016016 | 0.806386 | 0.792434 |
-| C5 | Vahadane | 0.918210 | 0.916754 | −0.001456 | 0.822317 | 0.844590 |
-| C6 | Adaptive single-ref | 0.911668 | 0.912844 | +0.001176 | 0.828901 | 0.845656 |
-| C6 | Adaptive multi-ref | 0.921192 | 0.881453 | −0.039739 | 0.800987 | 0.812527 |
-| C6 | Adaptive multi-ref + aug | 0.924074 | 0.902942 | −0.021132 | 0.814483 | 0.820281 |
+**Selection policy:** val_only — Method selected by highest validation ROC-AUC only (Adaptive multi-reference + train-time augmentation, 0.926132). Benchmark PCam test split not used for selection.
 
-**Best test ROC-AUC:** Macenko (0.9253). **Best test acc / F1 on this CNN:** adaptive single-ref (0.829 / 0.846).
+**Locked preprocessing for C1–C4:** Macenko (fixed before main study; val-only benchmark documents method comparison without using PCam test for selection).
+
+| ID | Arm | Val ROC-AUC |
+| --- | --- | ---: |
+| C5 | Macenko (classical single-reference) | 0.920167 |
+| C5 | Reinhard (classical single-reference) | 0.926087 |
+| C5 | Vahadane (classical single-reference) | 0.923694 |
+| C6 | Adaptive single-reference routing | 0.915791 |
+| C6 | Adaptive multi-reference routing | 0.924552 |
+| C6 | Adaptive multi-reference + train-time augmentation | 0.926132 |
+
+**Highest validation ROC-AUC (selection criterion):** Adaptive multi-reference + train-time augmentation (0.926132).
+
+Legacy development benchmark (included test split; not used for manuscript selection): `07_cnn_stain_benchmark/benchmark_cnn_runs/`.
+Val-only rerun outputs: `07_cnn_stain_benchmark/benchmark_cnn_runs_valonly/`.
 
 ---
 
@@ -469,30 +477,159 @@ UNI2-h: **85 fewer FN**, **112 fewer FP** vs Virchow on the same validation spli
 
 30 MC forward passes were run at export (`mc_dropout` block in JSON). Val ROC-AUC on MC-mean prob: **0.9797** vs **0.9798** deterministic — negligible change. Mean epistemic std across patches: **0.022**. **Do not use** for thesis tables (deterministic protocol).
 
-### 11.6 Comparison to Virchow **test** C1 (pending for UNI2-h)
+### 11.6 Val vs held-out test (PCam-trained UNI2-h)
 
-Virchow **held-out PCam test** (C1, §10.2): ROC-AUC **0.9813**, accuracy **0.9367**, recall **0.8919**, \(n_{\mathrm{test}} = 27{,}704\).
+| Split | ROC-AUC | Acc @ 0.5 | Recall | \(n\) |
+| --- | ---: | ---: | ---: | ---: |
+| Val (best ep. 1) | 0.9798 | 0.9398 | 0.8906 | 26,515 |
+| Test C1 (§11.9) | 0.9855 | 0.9502 | 0.9141 | 27,704 |
 
-UNI2-h **validation** (§11.3): ROC-AUC **0.9798**, accuracy **0.9398**, recall **0.8906**, \(n_{\mathrm{val}} = 26{,}515\).
+Test is **slightly stronger** than val on the same training origin (common when val selection is conservative).
 
-**Interpretation:** In-domain discrimination is **similar** on val; UNI2-h val accuracy is **slightly higher** than Virchow val at best epoch. **Headline claim requires** UNI2-h test eval on the reserved PCam test split (mirror `colab_eval_uni2h_pcam_test_beginner.ipynb` → `experiments/uni2h_colab/evals_cross_domain/pcam_trained_on_pcam_test/`).
+### 11.7–11.8 (superseded)
 
-### 11.7 Pending
+Training-only pending notes and synthesis from 2026-06-18 are replaced by §11.9–11.12 after C1–C4 test ingestion.
 
-| Item | Status |
-| --- | --- |
-| PCam reserved **test** eval (C1) | Not yet ingested |
-| Cross-domain test eval (C2–C4) | Not yet run |
-| WILDS CAMELYON17 **training** | Not yet ingested |
-| Bootstrap / permutation on UNI2-h test NPZ | Not yet run |
+### 11.9 UNI2-h held-out test metrics (C1–C4)
 
-### 11.8 Synthesis (validation-only)
+**Source:** `experiments/uni2h_colab/evals_cross_domain_uni2h/<folder>/test_metrics_detailed.json`  
+**Eval notebook:** `notebooks/colab/colab_eval_uni2h_all_pending_tests.ipynb`  
+**Protocol match to Virchow:** same post-QC Macenko test H5, batch **320**, `num_workers=0`, **MC samples = 0**, temperature from training-domain `temperature_fit.json`.
 
-1. **UNI2-h linear probe succeeds on Macenko PCam** — val ROC-AUC **~0.98**, comparable to Virchow on the same validation split.
-2. **Early stopping would suffice** — epoch 1 best for UNI2-h (epoch 2 for Virchow); epochs 3–10 add little ranking signal and slightly hurt threshold metrics.
-3. **Error mode** — high precision, moderate recall (~89%): more false negatives than false positives at 0.5 (FN **1,282** vs FP **315**).
-4. **Calibration** — ECE\(_{15}\) **0.022** raw, **0.018** after \(T\); mild temperature correction (\(T \approx 1.15\)).
-5. **External transfer (PCam→CAM17)** — unknown until C2 test eval; WILDS training run needed for C3/C4 mirror.
+| Condition | Subfolder | Train run |
+| --- | --- | --- |
+| C1 PCam → PCam | `pcam_trained_on_pcam_test` | `uni2h_macenko_bench_run_01` |
+| C2 PCam → CAM17 | `pcam_trained_on_cam17_test` | `uni2h_macenko_bench_run_01` |
+| C3 CAM17 → CAM17 | `cam17_trained_on_cam17_test` | `uni2h_wilds_preprocessed_run_01` |
+| C4 CAM17 → PCam | `cam17_trained_on_pcam_test` | `uni2h_wilds_preprocessed_run_01` |
+
+**Note on \(T\):** both training origins report `temperature_used` **1.1461** in the eval JSON (identical float). Virchow used distinct \(T\) per origin (1.2783 vs 1.5900). Confusion @ 0.5 is identical for raw vs calibrated in all four UNI2-h arms.
+
+#### 11.9a Calibrated test metrics (\(T\) scaled logits → sigmoid)
+
+| ID | Train → Test | \(n_{\mathrm{test}}\) | \(T\) | ROC-AUC | PR-AUC | Acc | Bal acc | Prec | Recall | F1 | Brier | Log loss | ECE\(_{15}\) |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| C1 | PCam → PCam | 27,704 | 1.1461 | 0.9855 | 0.9861 | 0.9502 | 0.9480 | 0.9778 | 0.9141 | 0.9449 | 0.0395 | 0.1455 | 0.0195 |
+| C2 | PCam → CAM17 | 83,181 | 1.1461 | 0.9980 | 0.9983 | 0.9853 | 0.9852 | 0.9815 | 0.9899 | 0.9857 | 0.0146 | 0.0698 | 0.0389 |
+| C3 | CAM17 → CAM17 | 83,181 | 1.1461 | 0.9974 | 0.9979 | 0.9837 | 0.9840 | 0.9951 | 0.9729 | 0.9839 | 0.0135 | 0.0571 | 0.0155 |
+| C4 | CAM17 → PCam | 27,704 | 1.1461 | 0.9811 | 0.9817 | 0.8963 | 0.8894 | 0.9924 | 0.7841 | 0.8760 | 0.0797 | 0.2839 | 0.1042 |
+
+#### 11.9b Raw sigmoid test metrics (no temperature)
+
+| ID | ROC-AUC | PR-AUC | Acc | Bal acc | Prec | Recall | F1 | Brier | Log loss | ECE\(_{15}\) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| C1 | 0.9855 | 0.9861 | 0.9502 | 0.9480 | 0.9778 | 0.9141 | 0.9449 | 0.0393 | 0.1444 | 0.0207 |
+| C2 | 0.9980 | 0.9983 | 0.9853 | 0.9852 | 0.9815 | 0.9899 | 0.9857 | 0.0134 | 0.0607 | 0.0291 |
+| C3 | 0.9974 | 0.9979 | 0.9837 | 0.9840 | 0.9951 | 0.9729 | 0.9839 | 0.0133 | 0.0550 | 0.0133 |
+| C4 | 0.9811 | 0.9817 | 0.8963 | 0.8894 | 0.9924 | 0.7841 | 0.8760 | 0.0812 | 0.3048 | 0.1039 |
+
+#### 11.9c Confusion @ 0.5 (identical for raw / calibrated)
+
+| ID | TP | TN | FP | FN |
+| --- | ---: | ---: | ---: | ---: |
+| C1 | 11,829 | 14,495 | 269 | 1,111 |
+| C2 | 42,039 | 39,922 | 791 | 429 |
+| C3 | 41,317 | 40,510 | 203 | 1,151 |
+| C4 | 10,146 | 14,686 | 78 | 2,794 |
+
+### 11.10 Cross-domain deltas (UNI2-h, calibrated @ 0.5)
+
+**PCam-trained**
+
+| Metric | In-domain (C1) | External (C2) | Δ (C2−C1) |
+| --- | ---: | ---: | ---: |
+| ROC-AUC | 0.9855 | 0.9980 | **+0.0124** |
+| Accuracy | 0.9502 | 0.9853 | **+0.0351** |
+
+**CAMELYON17-trained**
+
+| Metric | In-domain (C3) | External (C4) | Δ (C4−C3) |
+| --- | ---: | ---: | ---: |
+| ROC-AUC | 0.9974 | 0.9811 | **−0.0163** |
+| Accuracy | 0.9837 | 0.8963 | **−0.0874** |
+
+Same **asymmetric transfer** pattern as Virchow/CNN: PCam→CAM17 is easy/strong; CAM17→PCam loses accuracy mainly via **false negatives** (FN **2,794** on C4; precision stays very high at **0.992**).
+
+### 11.11 UNI2-h vs Virchow2 (same \(n_{\mathrm{test}}\), calibrated)
+
+| ID | Condition | Metric | UNI2-h | Virchow | UNI2-h − Virchow |
+| --- | --- | --- | ---: | ---: | ---: |
+| C1 | PCam → PCam | ROC-AUC | 0.9855 | 0.9813 | **+0.0042** |
+| C1 | PCam → PCam | Accuracy | 0.9502 | 0.9367 | **+0.0135** |
+| C1 | PCam → PCam | Recall | 0.9141 | 0.8919 | **+0.0222** |
+| C1 | PCam → PCam | Brier | 0.0395 | 0.0486 | **−0.0091** |
+| C2 | PCam → CAM17 | ROC-AUC | 0.9980 | 0.9971 | **+0.0009** |
+| C2 | PCam → CAM17 | Accuracy | 0.9853 | 0.9840 | **+0.0013** |
+| C3 | CAM17 → CAM17 | ROC-AUC | 0.9974 | 0.9966 | **+0.0008** |
+| C3 | CAM17 → CAM17 | Accuracy | 0.9837 | 0.9798 | **+0.0039** |
+| C4 | CAM17 → PCam | ROC-AUC | 0.9811 | 0.9502 | **+0.0309** |
+| C4 | CAM17 → PCam | Accuracy | 0.8963 | 0.8237 | **+0.0726** |
+| C4 | CAM17 → PCam | Recall | 0.7841 | 0.6304 | **+0.1537** |
+| C4 | CAM17 → PCam | Brier | 0.0797 | 0.1363 | **−0.0566** |
+| C4 | CAM17 → PCam | ECE\(_{15}\) | 0.1042 | 0.1600 | **−0.0558** |
+
+**Hard-direction ROC drop** (C4−C3): UNI2-h **−0.016** vs Virchow **−0.046**; accuracy drop UNI2-h **−0.087** vs Virchow **−0.156**.
+
+### 11.12 Synthesis (test C1–C4)
+
+1. **UNI2-h matches or exceeds Virchow on every cell** in the C1–C4 table under this frozen-encoder + linear-head protocol.
+2. **Largest gap is C4** (CAM17→PCam): UNI2-h keeps ROC-AUC **0.981** and accuracy **0.896** vs Virchow **0.950** / **0.824**, with much better recall (**0.78** vs **0.63**) and calibration.
+3. **PCam→CAM17 (C2)** is near-ceiling for both models (ROC ~**0.998**); UNI2-h and Virchow are essentially tied.
+4. **In-domain PCam (C1):** UNI2-h improves accuracy by **~1.4 pp** and ROC by **~0.4 pp** vs Virchow; fewer FN (**1,111** vs **1,399**).
+5. **Temperature on external CAM17 (C2):** ECE **worsens** after \(T\) (0.029 → 0.039 raw→cal) — PCam-fitted \(T\) is not ideal for CAM17 probabilities; ranking metrics unchanged. Prefer reporting **raw** ECE for C2 or refitting \(T\) only for probability quality claims.
+6. **Bootstrap CIs** for UNI2-h C1–C4 are in §11.13 (same protocol as Virchow §10.3). Optional: local archive of full WILDS training run folder.
+
+### 11.13 Bootstrap 95% CIs and paired tests (UNI2-h)
+
+**Source:** `reports/inference/uni2h_test_inference.json` (+ `.csv`)  
+**Command:**  
+`python scripts/virchow_test_bootstrap_inference.py --eval-root experiments/uni2h_colab/evals_cross_domain_uni2h --out reports/inference/uni2h_test_inference.json --workers 4`  
+
+Same settings as Virchow §10.3–10.5: case-level bootstrap \(B = 2000\), seed **42**, calibrated `prob_after_temperature`, paired transfer drops, paired permutation \(10{,}000\) sign-flips, BH \(q=0.05\) on Brier + log-loss confirmatory family.
+
+#### 11.13a Per-condition calibrated bootstrap CIs
+
+Format: point \([\)2.5th, 97.5th\(]\).
+
+| ID | ROC-AUC | PR-AUC | Accuracy | Brier | Log loss | ECE\(_{15}\) |
+| --- | --- | --- | --- | --- | --- | --- |
+| C1 | 0.9855 [0.9843, 0.9867] | 0.9861 [0.9849, 0.9873] | 0.9502 [0.9477, 0.9528] | 0.0395 [0.0379, 0.0412] | 0.1455 [0.1401, 0.1509] | 0.0195 [0.0177, 0.0221] |
+| C2 | 0.9980 [0.9977, 0.9982] | 0.9983 [0.9981, 0.9985] | 0.9853 [0.9845, 0.9862] | 0.0146 [0.0141, 0.0151] | 0.0698 [0.0684, 0.0714] | 0.0389 [0.0382, 0.0397] |
+| C3 | 0.9974 [0.9971, 0.9977] | 0.9979 [0.9977, 0.9982] | 0.9837 [0.9829, 0.9846] | 0.0135 [0.0129, 0.0141] | 0.0571 [0.0550, 0.0592] | 0.0155 [0.0148, 0.0163] |
+| C4 | 0.9811 [0.9796, 0.9826] | 0.9817 [0.9801, 0.9832] | 0.8963 [0.8926, 0.8998] | 0.0797 [0.0772, 0.0822] | 0.2839 [0.2743, 0.2940] | 0.1042 [0.1012, 0.1073] |
+
+#### 11.13b Paired bootstrap transfer contrasts (\(\Delta = M_{\mathrm{in}} - M_{\mathrm{ext}}\))
+
+**PCam test** — C1 minus C4 (\(n = 27{,}704\)):
+
+| Metric | \(\Delta\) point | 95% CI | CI excludes 0? |
+| --- | ---: | --- | :---: |
+| ROC-AUC | +0.0044 | [0.0034, 0.0053] | yes |
+| Accuracy | +0.0539 | [0.0509, 0.0568] | yes |
+| Brier | −0.0401 | [−0.0418, −0.0384] | yes |
+| Log loss | −0.1384 | [−0.1441, −0.1323] | yes |
+| ECE\(_{15}\) | −0.0847 | [−0.0873, −0.0815] | yes |
+
+**CAMELYON17 test** — C3 minus C2 (\(n = 83{,}181\)):
+
+| Metric | \(\Delta\) point | 95% CI | CI excludes 0? |
+| --- | ---: | --- | :---: |
+| ROC-AUC | −0.00055 | [−0.00079, −0.00031] | yes |
+| Accuracy | −0.00161 | [−0.00250, −0.00082] | yes |
+| Brier | −0.00108 | [−0.00154, −0.00061] | yes |
+| Log loss | −0.0127 | [−0.0144, −0.0110] | yes |
+| ECE\(_{15}\) | −0.0233 | [−0.0244, −0.0223] | yes |
+
+On CAM17 test, **C2 (PCam-trained) slightly beats C3** on discrimination/accuracy (negative C3−C2), while C3 is better on Brier/log-loss/ECE — same qualitative tension as Virchow §10.4, with small absolute ROC gaps.
+
+#### 11.13c Paired permutation + Benjamini–Hochberg
+
+| Test ID | Comparison | \(p\) | \(p_{\mathrm{BH}}\) | Reject \(q=0.05\)? |
+| --- | --- | ---: | ---: | :---: |
+| PCam test, Brier | C1 vs C4 | \(< 10^{-4}\) | \(< 10^{-4}\) | yes |
+| PCam test, log loss | C1 vs C4 | \(< 10^{-4}\) | \(< 10^{-4}\) | yes |
+| CAM17 test, Brier | C3 vs C2 | \(< 10^{-4}\) | \(< 10^{-4}\) | yes |
+| CAM17 test, log loss | C3 vs C2 | \(< 10^{-4}\) | \(< 10^{-4}\) | yes |
 
 ---
 
@@ -596,5 +733,7 @@ Checklist items: (1) tissue scarcity, (2) artifact burden, (3) borderline morpho
 | 2026-05-15 | §9: CNN baseline from `cnn_baseline_20260512_160329`; §10.8 CNN vs Virchow comparison. |
 | 2026-05-15 | §11.2–11.4 (old §11): qualitative checklist prevalences from completed `review_labels_template.csv` (C1–C4). |
 | 2026-06-18 | §11: UNI2-h PCam training validation from `experiments/uni2h_colab/uni2h_macenko_bench_run_01/`; val vs Virchow PCam training val; per-epoch table; test/C2–C4 pending. Renumbered qualitative → §12. |
+| 2026-08-20 | §11.9–11.12: UNI2-h C1–C4 held-out test from `evals_cross_domain_uni2h/*/test_metrics_detailed.json`; vs Virchow §10.2; transfer deltas. |
+| 2026-08-20 | §11.13: UNI2-h bootstrap CIs + paired transfer + permutation/BH from `reports/inference/uni2h_test_inference.json`. |
 
 When you add new JSON from Colab, append a short subsection with the file path and paste the headline scalars so this document stays the one-stop table of contents.
