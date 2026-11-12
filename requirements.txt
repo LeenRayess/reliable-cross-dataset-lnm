@@ -3,7 +3,6 @@ annotated-doc==0.0.4
 anyio==4.12.1
 asttokens==3.0.1
 astunparse==1.6.3
-audioread==3.1.0
 certifi==2026.1.4
 cffi==2.0.0
 charset-normalizer==3.4.4
@@ -46,7 +45,6 @@ keras==3.10.0
 kiwisolver==1.4.7
 lazy_loader==0.4
 libclang==18.1.1
-librosa==0.11.0
 llvmlite==0.43.0
 Markdown==3.9
 markdown-it-py==3.0.0
@@ -95,8 +93,6 @@ scikit-learn==1.6.1
 scipy==1.13.1
 shellingham==1.5.4
 six==1.17.0
-soundfile==0.13.1
-soxr==1.0.0
 spams-bin==2.6.13
 stack-data==0.6.3
 staintools==2.1.2
@@ -118,7 +114,6 @@ typer==0.24.1
 typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.3
-vmdpy==0.2
 wcwidth==0.6.0
 Werkzeug==3.1.5
 widgetsnbextension==4.0.15

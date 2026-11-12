@@ -11,9 +11,6 @@ ENV/
 env/
 .venv_clean/
 
-data/wilds/
-virchow_pcam_runs/
-
 # IDE
 .idea/
 .vscode/
@@ -49,16 +46,19 @@ htmlcov/
 # Project-specific
 # --------------------
 
-# Reference / external repos (optional)
+# Local / leftover folders that must never be published
 ECG_repo/
+.venv/
 
 # Experiments (trained models, logs, predictions)
 experiments/*
 !experiments/.gitkeep
+!experiments/README.md
 
 # Data — large files and datasets (do not commit)
 data/*.tar.gz
 data/*.zip
+data/wilds/
 notebooks/*.tar.gz
 notebooks/*.csv
 
@@ -66,10 +66,12 @@ notebooks/*.csv
 pcamv1/
 pcam_data/
 
-# Other data mirrors (if used)
-physionet_data/training/
-training/
+# Checkpoints and hub caches
+virchow_pcam_runs/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Private local copies (old docs/archive), never pushed
+local_only/
