@@ -79,6 +79,11 @@ def _cached_snapshot(repo: str):
         return None
 
 
+def gpu_tag(device) -> str:
+    name = torch.cuda.get_device_name(0) if device.type == "cuda" else "cpu"
+    return "".join(c if c.isalnum() else "_" for c in name.lower()).strip("_")
+
+
 def write_meta(args, backbone, device, out_model_dir: Path):
     import timm
     import huggingface_hub
@@ -104,7 +109,7 @@ def write_meta(args, backbone, device, out_model_dir: Path):
         "written_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     out_model_dir.mkdir(parents=True, exist_ok=True)
-    (out_model_dir / "extraction_meta.json").write_text(json.dumps(meta, indent=2))
+    (out_model_dir / "extraction_meta_{}.json".format(gpu_tag(device))).write_text(json.dumps(meta, indent=2))
     print(json.dumps(meta, indent=2))
     return meta
 
@@ -180,6 +185,7 @@ def extract_split(args, backbone, device, h5_dir: Path, split: str, out_dir: Pat
         "patches_per_second_model": round(rows_done / t_gpu, 2) if t_gpu > 0 else None,
         "peak_gpu_mem_gb": round(torch.cuda.max_memory_allocated() / 1e9, 3) if device.type == "cuda" else None,
         "source_x": str(x_path),
+        "device": torch.cuda.get_device_name(0) if device.type == "cuda" else "cpu",
     }
     (out_dir / "done.json").write_text(json.dumps(done, indent=2))
     print("done", out_dir, done)
@@ -216,7 +222,7 @@ def benchmark(args, backbone, device, out_model_dir: Path):
     t0 = time.time()
     transform_batch(x96[:256])
     res.append({"cpu_transform_ms_per_patch": round(1000 * (time.time() - t0) / 256, 3)})
-    (out_model_dir / "benchmark_forward.json").write_text(json.dumps(res, indent=2))
+    (out_model_dir / "benchmark_forward_{}.json".format(gpu_tag(device))).write_text(json.dumps(res, indent=2))
 
 
 def main():
@@ -243,10 +249,14 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     out_model_dir = Path(args.out_root) / args.model
 
+    bench_file = out_model_dir / "benchmark_forward_{}.json".format(gpu_tag(device))
+    if args.benchmark_only and bench_file.exists():
+        print("benchmark already done on this GPU, skipping:", bench_file)
+        return
     t0 = time.time()
     backbone = load_backbone(args.model, device)
     print("backbone loaded in {:.1f}s".format(time.time() - t0))
-    if not (out_model_dir / "extraction_meta.json").exists() or args.benchmark_only:
+    if not (out_model_dir / "extraction_meta_{}.json".format(gpu_tag(device))).exists() or args.benchmark_only:
         write_meta(args, backbone, device, out_model_dir)
 
     if args.benchmark_only:

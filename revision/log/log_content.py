@@ -123,8 +123,19 @@ STEPS = [
                   "is Step 2. **Consequence: the original results remain valid and directly comparable to the new runs.**"),
             ("p", "For reference, the local GPU (GTX 1050 Ti, 4 GB) processes 1.9 patches/s with Virchow2 in fp32 (peak memory 3.2 GB) — "
                   "this is why extraction runs on Colab. Colab throughput and memory figures will be added here after the run."),
-            ("h", "Results (Colab)"),
-            ("p", "Pending — to be filled in after the Colab run (throughput, latency, memory, UNI2-h commit)."),
+            ("h", "Results (Colab) — partial, run in progress"),
+            ("p", "UNI2-h was extracted on a Colab Tesla T4 (fp16) for PCam train/valid/test and CAMELYON17 train/valid; "
+                  "the remaining splits and Virchow2 are being extracted on an L4. Every split records the GPU that produced it (done.json). "
+                  "UNI2-h Hugging Face commit at extraction: **d517a8dd47902dd7c308b3c36f63bce47e7b9a43** "
+                  "(weight match with the original UNI2-h models to be confirmed in Step 2)."),
+            ("t", [["Model / GPU / precision", "Batch 1 (ms/patch)", "Batch 32 (ms/patch)", "Batch 256 (ms/patch)", "Peak GPU memory, batch 256"], [
+                ["UNI2-h / T4 / fp32", "126.2", "93.3", "122.3", "9.0 GB"],
+                ["UNI2-h / T4 / fp16", "47.6", "23.4", "27.0", "6.8 GB"],
+            ]]),
+            ("p", "Full-dataset extraction throughput (UNI2-h, T4, fp16, including disk reading and resizing): about 36.7 patches/s; "
+                  "e.g. 208,355 PCam training patches in 95 min. Virchow2 and L4 figures will be added when the run finishes."),
+            ("p", "**Training cost after caching:** a linear head on the 208,355 cached UNI2-h PCam training embeddings trains for 10 epochs in "
+                  "20 s on a GTX 1050 Ti (best validation accuracy 0.939, ROC-AUC 0.979; the original run reported 0.940 and 0.980)."),
             ("h", "Files"),
             ("b", [
                 "revision/scripts/extract_embeddings.py, revision/scripts/emb_io.py, revision/scripts/fm_common.py",

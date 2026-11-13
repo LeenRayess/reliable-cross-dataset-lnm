@@ -5,10 +5,11 @@ from pathlib import Path
 
 cells = [
     ("md", "# Step 1 — Extract foundation-model embeddings once (IEEE Access revision)\n\n"
-           "Runtime → Change runtime type → **T4 GPU** (or L4 if available). Run cells top to bottom.\n\n"
+           "Runtime → Change runtime type → **L4 GPU**. Run cells top to bottom.\n\n"
            "Everything is **resumable**: if Colab disconnects, just run all cells again — finished chunks are skipped.\n\n"
            "Uses half precision (fp16), checked to give the same decisions as the original fp32 runs. "
-           "Rough time for both datasets: T4 ~3–5 h per model, L4 ~1.5–3 h per model."),
+           "Measured on T4: ~37 patches/s (~5 h per model). L4 is roughly 2–3x faster.\n\n"
+           "Speed tests and finished pieces are skipped automatically, so **Runtime → Run all** is always safe."),
     ("code", "from google.colab import drive\ndrive.mount('/content/drive')\n!nvidia-smi"),
     ("code", "%cd /content\nimport os\nif os.path.isdir('GP_ECG'):\n    %cd GP_ECG\n    !git pull\nelse:\n"
              "    !git clone https://github.com/LeenRayess/reliable-cross-dataset-lnm.git GP_ECG\n    %cd GP_ECG\n!git log -1 --oneline"),
@@ -30,7 +31,7 @@ cells = [
              "        if not os.path.exists(out) or os.path.getsize(out) != os.path.getsize(f):\n"
              "            print('copying', f); shutil.copy(f, out + '.part'); os.replace(out + '.part', out)\n"
              "    LOCAL[tag] = dst\n    print(tag, os.listdir(dst))"),
-    ("md", "### Speed / memory benchmark (for the execution-time comments). Takes ~5 min per model."),
+    ("md", "### Speed / memory benchmark (for the execution-time comments). Takes ~5 min per model; skipped automatically if already done on this GPU type."),
     ("code", "for m in MODELS:\n    !python revision/scripts/extract_embeddings.py --model {m} --benchmark-only --out-root \"{OUT_ROOT}\""),
     ("md", "### Extract embeddings (train / valid / test of both datasets)"),
     ("code", "args = ' '.join('--h5-dir \"{}\" --dataset-tag {}'.format(LOCAL[t], t) for t in DATA)\n"
@@ -47,7 +48,7 @@ nb = {
         {"cell_type": "code", "metadata": {}, "execution_count": None, "outputs": [], "source": s}
         for k, s in cells
     ],
-    "metadata": {"accelerator": "GPU", "colab": {"gpuType": "T4"},
+    "metadata": {"accelerator": "GPU", "colab": {"gpuType": "L4"},
                  "kernelspec": {"name": "python3", "display_name": "Python 3"}},
     "nbformat": 4, "nbformat_minor": 5,
 }
