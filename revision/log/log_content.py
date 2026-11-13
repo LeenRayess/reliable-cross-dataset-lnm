@@ -124,8 +124,9 @@ STEPS = [
             ("p", "For reference, the local GPU (GTX 1050 Ti, 4 GB) processes 1.9 patches/s with Virchow2 in fp32 (peak memory 3.2 GB) — "
                   "this is why extraction runs on Colab. Colab throughput and memory figures will be added here after the run."),
             ("h", "Results (Colab) — partial, run in progress"),
-            ("p", "UNI2-h was extracted on a Colab Tesla T4 (fp16) for PCam train/valid/test and CAMELYON17 train/valid; "
-                  "the remaining splits and Virchow2 are being extracted on an L4. Every split records the GPU that produced it (done.json). "
+            ("p", "For consistency, all embeddings used in the experiments are extracted on a single GPU type (Colab NVIDIA L4, fp16). "
+                  "An earlier partial UNI2-h extraction on a Tesla T4 is kept separately (GP_ECG_REVISION/embeddings_t4_archive) and will be "
+                  "compared with the L4 embeddings as a cross-GPU reproducibility check. Every split records the GPU that produced it (done.json). "
                   "UNI2-h Hugging Face commit at extraction: **d517a8dd47902dd7c308b3c36f63bce47e7b9a43** "
                   "(weight match with the original UNI2-h models to be confirmed in Step 2)."),
             ("t", [["Model / GPU / precision", "Batch 1 (ms/patch)", "Batch 32 (ms/patch)", "Batch 256 (ms/patch)", "Peak GPU memory, batch 256"], [
