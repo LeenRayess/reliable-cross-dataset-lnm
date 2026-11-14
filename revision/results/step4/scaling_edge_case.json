@@ -1,0 +1,110 @@
+{
+ "pcam_raw/train": {
+  "dtype": "uint8",
+  "n": 262144,
+  "uint8_patches_max_le_1": 2,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 255.0,
+  "patches_where_rules_differ": 2
+ },
+ "pcam_raw/valid": {
+  "dtype": "uint8",
+  "n": 32768,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 255.0,
+  "patches_where_rules_differ": 0
+ },
+ "pcam_raw/test": {
+  "dtype": "uint8",
+  "n": 32768,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 255.0,
+  "patches_where_rules_differ": 0
+ },
+ "pcam_preprocessed/train": {
+  "dtype": "float32",
+  "n": 208355,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "pcam_preprocessed/valid": {
+  "dtype": "float32",
+  "n": 26515,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "pcam_preprocessed/test": {
+  "dtype": "float32",
+  "n": 27704,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_raw/train": {
+  "dtype": "float32",
+  "n": 302436,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_raw/valid": {
+  "dtype": "float32",
+  "n": 34904,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_raw/test": {
+  "dtype": "float32",
+  "n": 85054,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_preprocessed/train": {
+  "dtype": "float32",
+  "n": 296294,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_preprocessed/valid": {
+  "dtype": "float32",
+  "n": 34389,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ },
+ "cam17_preprocessed/test": {
+  "dtype": "float32",
+  "n": 83181,
+  "uint8_patches_max_le_1": 0,
+  "float_patches_max_gt_1p5": 0,
+  "global_min": 0.0,
+  "global_max": 1.0,
+  "patches_where_rules_differ": 0
+ }
+}
