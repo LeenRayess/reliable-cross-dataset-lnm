@@ -76,3 +76,4 @@ Thumbs.db
 # Private local copies (old docs/archive), never pushed
 local_only/
 data/revision_embeddings/
+data/revision_runs/
