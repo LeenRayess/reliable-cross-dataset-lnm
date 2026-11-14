@@ -70,7 +70,9 @@ NOTES = [
         "One slide (slide 28, patient 51) contributes 31,687 patches (38.1%), 85.0% of them tumour-positive. Patches per slide range from 3,373 to 31,687; "
         "positive fraction per slide ranges from 0.3% to 85.0% (slides 20, 21, 24, 27 are ≥97.5% negative). "
         "PCam test: 27,704 retained patches from 129 whole-slide images. Source: revision/results/test_clusters/.",
-        "**N8 — Not experimental:** R3-1 (add an independent institution) is not part of the current experiment plan; "
+        "**N8 — Manuscript reference copy.** The submitted manuscript is in docs/IEEE_Access_Manuscript_SUBMISSION_READY_v2_bio.docx "
+        "(byte-identical to papers/manuscript_draft_under_review.docx). All comparisons with 'the manuscript' in this log refer to this file.",
+        "**N9 — Not experimental:** R3-1 (add an independent institution) is not part of the current experiment plan; "
         "it needs a decision on whether to argue and restrict the claims or to add a dataset.",
     ]),
 ]
@@ -343,6 +345,41 @@ STEPS = [
                 "original_vs_seeds.csv, checkpoint_rule_sensitivity.csv, diag_trainloss.json, summary.json",
                 "revision/results/test_clusters/: pcam_test_clusters.csv, cam17_test_clusters.csv (slide/patient per test patch)",
                 "data/revision_runs/step3/ (not in git): per-run validation/test logits for every epoch and training histories",
+            ]),
+        ],
+    },
+    {
+        "title": "Step 3b — Reproduction of the manuscript's slide-cluster bootstrap",
+        "date": "2026-11-14",
+        "answers": "Reproducibility of the submitted confidence intervals (the original bootstrap code was not kept); R3-10; R3 (numerical consistency)",
+        "blocks": [
+            ("h", "What was done"),
+            ("p", "The code that produced the submitted slide-cluster bootstrap intervals (Table III and the C4 paired contrasts) is not in the project files. "
+                  "The procedure was re-implemented exactly as the manuscript describes it: 2,000 replicates per condition and model; each replicate samples test "
+                  "slides with replacement (PCam: 129 whole-slide images from the official test metadata; CAMELYON17-WILDS: 10 WILDS slides) and includes all "
+                  "retained patches of each sampled slide; metrics from temperature-scaled probabilities at threshold 0.5; 95% percentile intervals; the C4 "
+                  "UNI2-h − Virchow2 contrast uses the same resampled slides for both models. It was applied to the original per-patch prediction files. "
+                  "Because the original random seed is unknown, the whole procedure was run with 5 different bootstrap seeds (0, 1, 2, 3, 42)."),
+            ("h", "Results"),
+            ("b", [
+                "All 37 interval end points printed in the manuscript (Table III: ROC-AUC, recall, F1, ECE15 for 8 model × condition cells; "
+                "C4 contrasts for ROC-AUC, accuracy, recall, F1, ECE15) were compared with the reproduced end points.",
+                "Median absolute difference 0.0018; maximum 0.0095 (C3 Virchow2 F1 lower bound: manuscript 0.9225, reproduced 0.9205–0.9320 across the 5 seeds). "
+                "For every end point the manuscript value lies within or close to the spread produced by changing only the bootstrap seed, i.e. the differences "
+                "are Monte-Carlo variation.",
+                "Examples: C4 Virchow2 ROC-AUC manuscript [0.9340, 0.9650], reproduced lower 0.9332–0.9345, upper 0.9647–0.9657; "
+                "C4 contrast ROC-AUC manuscript [0.0201, 0.0427], reproduced lower 0.0203–0.0210, upper 0.0423–0.0435; "
+                "C4 contrast recall manuscript [0.1147, 0.1948], reproduced lower 0.1139–0.1162, upper 0.1935–0.1967; "
+                "C2 UNI2-h ROC-AUC manuscript [0.9975, 0.9986], reproduced [0.9975, 0.9986–0.9987].",
+                "Conclusion: the submitted slide-cluster intervals are reproducible from the saved predictions with the documented procedure, "
+                "and a script now exists for them.",
+                "Not reproduced here: the matched-index CNN intervals (no per-patch CNN prediction files were kept; they are regenerated in Step 4) and the "
+                "stain-benchmark-disjoint subset analysis.",
+            ]),
+            ("h", "Files"),
+            ("b", [
+                "revision/scripts/reproduce_cluster_bootstrap.py",
+                "revision/results/cluster_bootstrap_reproduction/intervals.csv (all metrics, all seeds), comparison_with_manuscript.csv",
             ]),
         ],
     },
