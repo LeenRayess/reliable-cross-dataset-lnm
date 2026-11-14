@@ -1,0 +1,200 @@
+{
+  "models": {
+    "virchow2": {
+      "encoder_hf_commit_used_for_extraction": "3158645804b69e3f3bc4439d4116edddf0840a72",
+      "encoder_hash_extraction": "dc617e0b70fa3d2844e82dedc22ce829144a47705461c22eb40437a1d8a2dd24",
+      "conditions": {
+        "C1": {
+          "n_test": 27704,
+          "head_files": [
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_macenko_bench_run_01/model_best.pt"
+          ],
+          "same_decision_at_0.5": 0.9997473289055732,
+          "n_decisions_changed": 7,
+          "max_abs_logit_diff": 0.08574247360229492,
+          "mean_abs_logit_diff": 0.010642432123038718,
+          "max_abs_prob_diff_calibrated": 0.010419269476425574,
+          "roc_auc_original": 0.9813234037260943,
+          "roc_auc_cached": 0.9813247018416912,
+          "accuracy_original": 0.936687842910771,
+          "accuracy_cached": 0.9367239387814034,
+          "temperature_T": 1.27826988697052
+        },
+        "C2": {
+          "n_test": 83181,
+          "head_files": [
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_macenko_bench_run_01/model_best.pt"
+          ],
+          "same_decision_at_0.5": 0.999891802214448,
+          "n_decisions_changed": 9,
+          "max_abs_logit_diff": 0.10960006713867188,
+          "mean_abs_logit_diff": 0.010531224700861985,
+          "max_abs_prob_diff_calibrated": 0.01859513031171628,
+          "roc_auc_original": 0.9970595199946839,
+          "roc_auc_cached": 0.9970618970917059,
+          "accuracy_original": 0.9840107716906505,
+          "accuracy_cached": 0.9839747057621332,
+          "temperature_T": 1.27826988697052
+        },
+        "C3": {
+          "n_test": 83181,
+          "head_files": [
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_wilds_preprocessed_run_01/model_best.pt"
+          ],
+          "same_decision_at_0.5": 0.9998797802382756,
+          "n_decisions_changed": 10,
+          "max_abs_logit_diff": 0.1442127227783203,
+          "mean_abs_logit_diff": 0.014085434231551489,
+          "max_abs_prob_diff_calibrated": 0.014745443900137767,
+          "roc_auc_original": 0.9965691269033223,
+          "roc_auc_cached": 0.9965707743877183,
+          "accuracy_original": 0.9798271239826403,
+          "accuracy_cached": 0.9798271239826403,
+          "temperature_T": 1.5900037288665771
+        },
+        "C4": {
+          "n_test": 27704,
+          "head_files": [
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_wilds_preprocessed_run_01/model_best.pt"
+          ],
+          "same_decision_at_0.5": 0.999458561940514,
+          "n_decisions_changed": 15,
+          "max_abs_logit_diff": 0.14266538619995117,
+          "mean_abs_logit_diff": 0.015068633530806366,
+          "max_abs_prob_diff_calibrated": 0.014964089198466701,
+          "roc_auc_original": 0.9502370657436925,
+          "roc_auc_cached": 0.9502507954098632,
+          "accuracy_original": 0.8236716719607277,
+          "accuracy_cached": 0.8237799595726248,
+          "temperature_T": 1.5900037288665771
+        }
+      },
+      "heads": [
+        {
+          "files": [
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/cam17_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_wilds_preprocessed_run_01/model_best.pt"
+          ],
+          "encoder_hash_in_checkpoint": "dc617e0b70fa3d2844e82dedc22ce829144a47705461c22eb40437a1d8a2dd24",
+          "encoder_matches_extraction": true
+        },
+        {
+          "files": [
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_cam17_test/model_best.pt",
+            "experiments/virchow_colab/evals_cross_domain/pcam_trained_on_pcam_test/model_best.pt",
+            "experiments/virchow_colab/virchow_macenko_bench_run_01/model_best.pt"
+          ],
+          "encoder_hash_in_checkpoint": "dc617e0b70fa3d2844e82dedc22ce829144a47705461c22eb40437a1d8a2dd24",
+          "encoder_matches_extraction": true
+        }
+      ]
+    },
+    "uni2h": {
+      "encoder_hf_commit_used_for_extraction": "d517a8dd47902dd7c308b3c36f63bce47e7b9a43",
+      "encoder_hash_extraction": "9e4c5863d849fd1b70715044e227214ed10508c7ad5aa670ee767ecdd52bf04b",
+      "conditions": {
+        "C1": {
+          "n_test": 27704,
+          "head_files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-001.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-003.pt",
+            "project_outputs/04_uni2h_weights/uni2h_pcam_train__model_best2.pt"
+          ],
+          "same_decision_at_0.5": 0.9999278082587352,
+          "n_decisions_changed": 2,
+          "max_abs_logit_diff": 0.028905630111694336,
+          "mean_abs_logit_diff": 0.001110069006611519,
+          "max_abs_prob_diff_calibrated": 0.004338877241611194,
+          "roc_auc_original": 0.9855284555313754,
+          "roc_auc_cached": 0.9855303529785682,
+          "accuracy_original": 0.9501876985272885,
+          "accuracy_cached": 0.9501876985272885,
+          "temperature_T": 1.146132230758667
+        },
+        "C2": {
+          "n_test": 83181,
+          "head_files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-001.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-003.pt",
+            "project_outputs/04_uni2h_weights/uni2h_pcam_train__model_best2.pt"
+          ],
+          "same_decision_at_0.5": 0.9999759560476551,
+          "n_decisions_changed": 2,
+          "max_abs_logit_diff": 0.02401876449584961,
+          "mean_abs_logit_diff": 0.0011625176247740151,
+          "max_abs_prob_diff_calibrated": 0.003934841256798383,
+          "roc_auc_original": 0.9979733969691114,
+          "roc_auc_cached": 0.9979734033311716,
+          "accuracy_original": 0.9853331890696193,
+          "accuracy_cached": 0.9853331890696193,
+          "temperature_T": 1.146132230758667
+        },
+        "C3": {
+          "n_test": 83181,
+          "head_files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-002.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-004.pt",
+            "project_outputs/04_uni2h_weights/uni2h_cam17_train__model_best2.pt"
+          ],
+          "same_decision_at_0.5": 1.0,
+          "n_decisions_changed": 0,
+          "max_abs_logit_diff": 0.024610519409179688,
+          "mean_abs_logit_diff": 0.0012624544551457055,
+          "max_abs_prob_diff_calibrated": 0.004774630479681186,
+          "roc_auc_original": 0.997426531339956,
+          "roc_auc_cached": 0.9974262644226141,
+          "accuracy_original": 0.9837222442625119,
+          "accuracy_cached": 0.9837222442625119,
+          "temperature_T": 1.146132230758667
+        },
+        "C4": {
+          "n_test": 27704,
+          "head_files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-002.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-004.pt",
+            "project_outputs/04_uni2h_weights/uni2h_cam17_train__model_best2.pt"
+          ],
+          "same_decision_at_0.5": 0.9999278082587352,
+          "n_decisions_changed": 2,
+          "max_abs_logit_diff": 0.03104400634765625,
+          "mean_abs_logit_diff": 0.001181922960836024,
+          "max_abs_prob_diff_calibrated": 0.003339446554100678,
+          "roc_auc_original": 0.9811388645550373,
+          "roc_auc_cached": 0.9811404008329716,
+          "accuracy_original": 0.8963326595437482,
+          "accuracy_cached": 0.8963326595437482,
+          "temperature_T": 1.146132230758667
+        }
+      },
+      "heads": [
+        {
+          "files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-001.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-003.pt",
+            "project_outputs/04_uni2h_weights/uni2h_pcam_train__model_best2.pt"
+          ],
+          "encoder_hash_in_checkpoint": "9e4c5863d849fd1b70715044e227214ed10508c7ad5aa670ee767ecdd52bf04b",
+          "encoder_matches_extraction": true
+        },
+        {
+          "files": [
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-002.pt",
+            "experiments/uni2h_colab/evals_cross_domain_uni2h/model_best-004.pt",
+            "project_outputs/04_uni2h_weights/uni2h_cam17_train__model_best2.pt"
+          ],
+          "encoder_hash_in_checkpoint": "9e4c5863d849fd1b70715044e227214ed10508c7ad5aa670ee767ecdd52bf04b",
+          "encoder_matches_extraction": true
+        }
+      ]
+    }
+  }
+}

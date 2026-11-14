@@ -1,0 +1,57 @@
+{
+  "pcam_macenko/train": {
+    "n": 208355,
+    "min_cosine": 0.999981164932251,
+    "mean_cosine": 0.9999999403953552,
+    "max_abs_diff": 0.0076904296875,
+    "relative_l2_diff_mean": 0.0006939425365999341,
+    "same_decision_pcam_head": 0.9999856014974443,
+    "n_changed_pcam_head": 3,
+    "same_decision_cam17_head": 0.9999904009982962,
+    "n_changed_cam17_head": 2
+  },
+  "pcam_macenko/valid": {
+    "n": 26515,
+    "min_cosine": 0.9999940395355225,
+    "mean_cosine": 0.9999998807907104,
+    "max_abs_diff": 0.005126953125,
+    "relative_l2_diff_mean": 0.0006874753744341433,
+    "same_decision_pcam_head": 0.9999622854987743,
+    "n_changed_pcam_head": 1,
+    "same_decision_cam17_head": 1.0,
+    "n_changed_cam17_head": 0
+  },
+  "pcam_macenko/test": {
+    "n": 27704,
+    "min_cosine": 0.9999945163726807,
+    "mean_cosine": 0.9999998807907104,
+    "max_abs_diff": 0.005615234375,
+    "relative_l2_diff_mean": 0.0007022467325441539,
+    "same_decision_pcam_head": 1.0,
+    "n_changed_pcam_head": 0,
+    "same_decision_cam17_head": 1.0,
+    "n_changed_cam17_head": 0
+  },
+  "cam17_macenko/train": {
+    "n": 296294,
+    "min_cosine": 0.999993622303009,
+    "mean_cosine": 0.9999998807907104,
+    "max_abs_diff": 0.006103515625,
+    "relative_l2_diff_mean": 0.0007514677126891911,
+    "same_decision_pcam_head": 0.9999932499476871,
+    "n_changed_pcam_head": 2,
+    "same_decision_cam17_head": 0.9999966249738436,
+    "n_changed_cam17_head": 1
+  },
+  "cam17_macenko/valid": {
+    "n": 34389,
+    "min_cosine": 0.9999819397926331,
+    "mean_cosine": 0.9999997615814209,
+    "max_abs_diff": 0.00830078125,
+    "relative_l2_diff_mean": 0.0007430547848343849,
+    "same_decision_pcam_head": 1.0,
+    "n_changed_pcam_head": 0,
+    "same_decision_cam17_head": 1.0,
+    "n_changed_cam17_head": 0
+  }
+}

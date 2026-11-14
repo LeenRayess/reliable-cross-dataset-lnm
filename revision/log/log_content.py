@@ -23,7 +23,7 @@ INTRO = [
 # Reviewer comment -> step -> status. Status: Planned / In progress / Done / Writing only (for the professor)
 TRACKER = [
     ["Reviewer & comment", "What is needed", "Step", "Status"],
-    ["R1-Q2, R3-5, R3-9", "Repeat foundation-model runs with several seeds and identical (harmonized) head settings", "1, 2, 3", "In progress"],
+    ["R1-Q2, R3-5, R3-9", "Repeat foundation-model runs with several seeds and identical (harmonized) head settings", "1, 2, 3", "Steps 1–2 done; Step 3 next"],
     ["R1-Q2", "Repeat CNN arms with several seeds; confirm raw and preprocessed inputs scaled the same way", "4", "Planned"],
     ["R3-3", "Component-wise ablation of the preprocessing pipeline", "5", "Planned"],
     ["R3-4", "Quality-control filter: class-specific effect, alternative thresholds, what is removed", "6", "Planned"],
@@ -32,8 +32,8 @@ TRACKER = [
     ["R3-8", "Why source-domain temperature scaling does not transfer; alternative calibration", "9", "Planned"],
     ["R3-11", "Additional baseline (ImageNet-pretrained network)", "10", "Planned"],
     ["R3-13", "False-positive / false-negative patch analysis", "11", "Planned"],
-    ["R2-2, R3 (additional)", "Execution time, inference time, memory, deployment cost", "1 (+12)", "In progress"],
-    ["R3-10", "Exact model versions, dependencies, code, seeds", "0, 1", "In progress"],
+    ["R2-2, R3 (additional)", "Execution time, inference time, memory, deployment cost", "1 (+12)", "Done for foundation models; CNN in Step 4"],
+    ["R3-10", "Exact model versions, dependencies, code, seeds", "0, 1, 2", "Model versions done; seeds in Step 3"],
     ["R3 (additional)", "Numerical consistency between tables / supplement", "12", "Planned"],
     ["R1-Q2, R3-6", "Relabel C3 as held-out-center evaluation", "—", "Writing only (see note N1)"],
     ["R1-Q3/Q4, R2-1/3/4/5/6, R3-1/14/15, conclusion", "Text, references, novelty, limitations, independent-dataset argument", "—", "Writing only"],
@@ -69,16 +69,17 @@ STEPS = [
                   "A SHA-256 fingerprint of those weights was computed and compared with the fingerprint of the Hugging Face release. "
                   "For Virchow2 the fingerprints are identical, so the original experiments used Hugging Face commit "
                   "**3158645804b69e3f3bc4439d4116edddf0840a72** of paige-ai/Virchow2. "
-                  "The same check will be done for UNI2-h during Step 1 on Colab (UNI2-h is not cached locally)."),
+                  "The same check for UNI2-h (Step 2) shows that the original UNI2-h models used Hugging Face commit "
+                  "**d517a8dd47902dd7c308b3c36f63bce47e7b9a43** of MahmoodLab/UNI2-h."),
             ("t", [["Item", "Value"], [
                 ["Virchow2", "paige-ai/Virchow2 @ 3158645804b69e3f3bc4439d4116edddf0840a72 (verified by weight hash); 631.2 M parameters; 2560-d embedding (CLS + mean patch token)"],
-                ["UNI2-h", "MahmoodLab/UNI2-h — commit to be pinned in Step 1; 1536-d CLS embedding"],
+                ["UNI2-h", "MahmoodLab/UNI2-h @ d517a8dd47902dd7c308b3c36f63bce47e7b9a43 (verified by weight hash); 681.4 M parameters; 1536-d CLS embedding"],
                 ["Local environment", "Python 3.10.7, PyTorch 2.5.1 (CUDA 12.1), timm 1.0.31, huggingface_hub 2.4.0, NumPy 2.2.6, h5py 3.16.0, scikit-learn 1.7.2"],
-                ["Colab environment", "Recorded automatically by the extraction script in extraction_meta.json"],
+                ["Colab environment (embedding extraction)", "NVIDIA L4, Python 3.13.16, PyTorch 2.14.1 (CUDA 13.0, cuDNN 9.28), timm 1.0.31, huggingface_hub 2.4.0, NumPy 2.4.6, h5py 3.16.0"],
             ]]),
             ("h", "Suggested wording"),
             ("p", "\"Encoder weights were identified by SHA-256 fingerprint of the frozen parameters stored with each trained model; "
-                  "Virchow2 corresponds to Hugging Face commit 3158645 and UNI2-h to commit [Step 1]. Code, configuration files, "
+                  "Virchow2 corresponds to Hugging Face commit 3158645 and UNI2-h to commit d517a8d. Code, configuration files, "
                   "seeds and per-patch predictions are released with the paper.\""),
             ("h", "Files"),
             ("b", ["revision/scripts/fm_common.py (model loading, input transform, weight fingerprint)"]),
@@ -122,27 +123,85 @@ STEPS = [
             ("p", "The tiny differences are ordinary floating-point differences between GPUs. The full check on all test sets for both models "
                   "is Step 2. **Consequence: the original results remain valid and directly comparable to the new runs.**"),
             ("p", "For reference, the local GPU (GTX 1050 Ti, 4 GB) processes 1.9 patches/s with Virchow2 in fp32 (peak memory 3.2 GB) — "
-                  "this is why extraction runs on Colab. Colab throughput and memory figures will be added here after the run."),
-            ("h", "Results (Colab) — partial, run in progress"),
-            ("p", "For consistency, all embeddings used in the experiments are extracted on a single GPU type (Colab NVIDIA L4, fp16). "
-                  "An earlier partial UNI2-h extraction on a Tesla T4 is kept separately (GP_ECG_REVISION/embeddings_t4_archive) and will be "
-                  "compared with the L4 embeddings as a cross-GPU reproducibility check. Every split records the GPU that produced it (done.json). "
-                  "UNI2-h Hugging Face commit at extraction: **d517a8dd47902dd7c308b3c36f63bce47e7b9a43** "
-                  "(weight match with the original UNI2-h models to be confirmed in Step 2)."),
+                  "this is why extraction runs on Colab."),
+            ("h", "Results (Colab, completed 2026-11-14)"),
+            ("p", "All embeddings used in the experiments were extracted on one GPU type (Google Colab NVIDIA L4), fp16, stored as float16: "
+                  "676,438 patches per model (PCam train 208,355 / valid 26,515 / test 27,704; CAMELYON17 train 296,294 / valid 34,389 / test 83,181), "
+                  "about 2.25 h per model at 83.8 (UNI2-h) and 83.4 (Virchow2) patches/s including disk reading and resizing. Total cached size 5.2 GB."),
+            ("p", "**Inference cost (encoder forward pass, synthetic 96×96 inputs upsampled to 224×224):**"),
             ("t", [["Model / GPU / precision", "Batch 1 (ms/patch)", "Batch 32 (ms/patch)", "Batch 256 (ms/patch)", "Peak GPU memory, batch 256"], [
-                ["UNI2-h / T4 / fp32", "126.2", "93.3", "122.3", "9.0 GB"],
+                ["UNI2-h / L4 / fp16", "26.6", "11.5", "12.0", "6.8 GB"],
+                ["UNI2-h / L4 / fp32", "55.2", "46.2", "45.0", "9.0 GB"],
                 ["UNI2-h / T4 / fp16", "47.6", "23.4", "27.0", "6.8 GB"],
+                ["UNI2-h / T4 / fp32", "126.2", "93.3", "122.3", "9.0 GB"],
+                ["Virchow2 / L4 / fp16", "25.2", "11.7", "11.5", "5.9 GB"],
+                ["Virchow2 / L4 / fp32", "55.7", "47.0", "43.7", "7.7 GB"],
+                ["Virchow2 / T4 / fp16", "45.8", "24.2", "25.9", "5.9 GB"],
+                ["Virchow2 / T4 / fp32", "141.9", "102.7", "117.5", "7.7 GB"],
             ]]),
-            ("p", "Full-dataset extraction throughput (UNI2-h, T4, fp16, including disk reading and resizing): about 36.7 patches/s; "
-                  "e.g. 208,355 PCam training patches in 95 min. Virchow2 and L4 figures will be added when the run finishes."),
+            ("p", "Model sizes: UNI2-h 681.4 M parameters, Virchow2 631.2 M parameters (frozen); trainable linear head 1,537 (UNI2-h) / 2,561 (Virchow2) parameters. "
+                  "Batch-1 memory (about 2.6–2.8 GB) is essentially the model weights. CPU-side resizing/normalisation costs about 1 ms per patch. "
+                  "Example: the 83,181-patch CAMELYON17 test set is encoded in about 17 min on one L4 (fp16)."),
             ("p", "**Training cost after caching:** a linear head on the 208,355 cached UNI2-h PCam training embeddings trains for 10 epochs in "
-                  "20 s on a GTX 1050 Ti (best validation accuracy 0.939, ROC-AUC 0.979; the original run reported 0.940 and 0.980)."),
+                  "20 s on a GTX 1050 Ti (best validation accuracy 0.939, ROC-AUC 0.979; the original run reported 0.940 and 0.980). "
+                  "In the original pipeline the encoder was re-run in every epoch (about 2 million encoder passes per training run), which took days."),
+            ("h", "Suggested wording (execution time, R2-2 / R3)"),
+            ("p", "\"Encoding one 96×96 patch (upsampled to 224×224) takes about 12 ms on an NVIDIA L4 in half precision at batch size 256 "
+                  "(UNI2-h 12.0 ms, Virchow2 11.5 ms; 27 ms and 26 ms on an NVIDIA T4), with a peak GPU memory of 6.8 GB and 5.9 GB respectively. "
+                  "Because the encoders are frozen, embeddings are computed once (about 2.25 h per model for all 676,438 patches on one L4); "
+                  "training the linear head then takes under a minute.\""),
             ("h", "Files"),
             ("b", [
                 "revision/scripts/extract_embeddings.py, revision/scripts/emb_io.py, revision/scripts/fm_common.py",
                 "revision/notebooks/colab_step1_extract_embeddings.ipynb",
                 "Google Drive: GP_ECG_REVISION/embeddings/<model>/<dataset>/<split>/ (embeddings, labels, done.json with timing), "
-                "<model>/extraction_meta.json, <model>/benchmark_forward.json",
+                "<model>/extraction_meta_<gpu>.json, <model>/benchmark_forward_<gpu>.json; local copy in data/revision_embeddings/ (not in git)",
+            ]),
+        ],
+    },
+    {
+        "title": "Step 2 — Original models reproduce their results on the cached embeddings",
+        "date": "2026-11-14",
+        "answers": "Shows the new experiments are comparable with the submitted results; R3-10 (exact model versions)",
+        "blocks": [
+            ("h", "What was done"),
+            ("p", "The original trained linear heads (from the original model_best.pt files) were applied to the new L4 test embeddings "
+                  "for all eight model × condition cells (Virchow2 and UNI2-h, C1–C4) and compared patch-by-patch with the original "
+                  "prediction files (test_predictions.npz). The encoder weights stored inside every original checkpoint were fingerprinted "
+                  "and compared with the encoder used for extraction."),
+            ("h", "Results"),
+            ("t", [["Model", "Cond.", "n test", "Decisions changed at 0.5", "ROC-AUC original → cached", "Accuracy original → cached", "Max |Δ logit|"], [
+                ["Virchow2", "C1", "27,704", "7 (0.03%)", "0.9813 → 0.9813", "0.9367 → 0.9367", "0.086"],
+                ["Virchow2", "C2", "83,181", "9 (0.01%)", "0.9971 → 0.9971", "0.9840 → 0.9840", "0.110"],
+                ["Virchow2", "C3", "83,181", "10 (0.01%)", "0.9966 → 0.9966", "0.9798 → 0.9798", "0.144"],
+                ["Virchow2", "C4", "27,704", "15 (0.05%)", "0.9502 → 0.9503", "0.8237 → 0.8238", "0.143"],
+                ["UNI2-h", "C1", "27,704", "2 (0.01%)", "0.9855 → 0.9855", "0.9502 → 0.9502", "0.029"],
+                ["UNI2-h", "C2", "83,181", "2 (<0.01%)", "0.9980 → 0.9980", "0.9853 → 0.9853", "0.024"],
+                ["UNI2-h", "C3", "83,181", "0", "0.9974 → 0.9974", "0.9837 → 0.9837", "0.025"],
+                ["UNI2-h", "C4", "27,704", "2 (0.01%)", "0.9811 → 0.9811", "0.8963 → 0.8963", "0.031"],
+            ]]),
+            ("b", [
+                "**Every original checkpoint contains exactly the encoder weights used for extraction** (SHA-256 match): Virchow2 = Hugging Face "
+                "commit 3158645804b69e3f3bc4439d4116edddf0840a72, UNI2-h = commit d517a8dd47902dd7c308b3c36f63bce47e7b9a43. "
+                "This resolves the reviewer concern that the UNI2-h version was not pinned.",
+                "The checkpoint-to-training-set mapping for UNI2-h, previously marked provisional, is confirmed from the data: "
+                "model_best-001/-003 and uni2h_pcam_train__model_best2.pt = PCam-trained; model_best-002/-004 and uni2h_cam17_train__model_best2.pt = CAMELYON17-trained.",
+                "**Cross-GPU reproducibility:** UNI2-h embeddings extracted on a T4 and on an L4 (five splits, 593,257 patches) have a mean cosine similarity "
+                "of 0.9999999 (minimum 0.99998); with the original heads, at most 3 of 593,257 decisions differ.",
+            ]),
+            ("h", "Interpretation"),
+            ("p", "Reported metrics are reproduced to the fourth decimal place; at most 15 of 27,704 patch decisions (0.05%) differ, all from "
+                  "half-precision rounding of patches lying at the decision boundary. The cached-embedding pipeline is therefore the same model as the "
+                  "original, and the repeated-seed and harmonized experiments in Step 3 are directly comparable with the submitted results."),
+            ("h", "Suggested wording"),
+            ("p", "\"Because the encoders are frozen, patch embeddings were computed once (fp16, NVIDIA L4) and cached. Applying the originally "
+                  "trained heads to the cached embeddings reproduced all reported test ROC-AUC and accuracy values to within 0.0001, "
+                  "and embeddings were reproducible across GPU types (mean cosine similarity > 0.99999).\""),
+            ("h", "Files"),
+            ("b", [
+                "revision/scripts/step2_equivalence.py → revision/results/step2/equivalence.json",
+                "revision/scripts/step2_cross_gpu.py → revision/results/step2/cross_gpu_t4_vs_l4.json",
+                "revision/results/step2/original_heads/*.npz (original linear heads + temperatures, extracted from the original checkpoints)",
             ]),
         ],
     },
