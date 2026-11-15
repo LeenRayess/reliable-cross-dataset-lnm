@@ -26,7 +26,9 @@ cells = [
              "            src, dst = f'{stem}_{k}.h5', f'{DATA_ROOT}/{surf}/{split}_{k}.h5'\n"
              "            if not os.path.exists(dst) or os.path.getsize(dst) != os.path.getsize(src):\n"
              "                print('copying', src, flush=True); shutil.copy(src, dst + '.part'); os.replace(dst + '.part', dst)\n"
-             "print('data ready'); !du -sh /content/cnn_data/*"),
+             "print('data ready')\n"
+             "for surf in SRC:\n    for f in sorted(os.listdir(f'{DATA_ROOT}/{surf}')):\n"
+             "        print(surf, f, round(os.path.getsize(f'{DATA_ROOT}/{surf}/{f}') / 1e9, 2), 'GB')"),
     ("md", "### Train (about 6–10 h in total; progress prints one line per epoch)"),
     ("code", "OUT = '/content/drive/MyDrive/GP_ECG_REVISION'\n"
              "!python revision/scripts/step4_cnn_seeds.py --data-root /content/cnn_data "
